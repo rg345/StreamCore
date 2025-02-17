@@ -1,0 +1,14 @@
+{
+  "name": "project_setup01",
+  "version": "1.0.0",
+  "description": "setting up the backend project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rohit Gunwal",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
