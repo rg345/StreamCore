@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "description": "setting up the backend project",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js"
-    
   },
   "author": "Rohit Gunwal",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.5.1"
+  }
 }
