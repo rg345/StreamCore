@@ -9,7 +9,9 @@
   },
   "author": "Rohit Gunwal",
   "license": "ISC",
-  "devDependencies": {
-    "prettier": "^3.5.1"
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.10.1"
   }
 }
