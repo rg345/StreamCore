@@ -8,10 +8,20 @@ import connectDB  from "./db/index.js"
 dotenv.config({
     path : './.env'
 })
-
+const app = express()
+let port = process.env.PORT || 8000;
+   
 connectDB()
+.then(()=>{
+    app.listen(port, ()=>{
+        console.log(`server is running on port ${port}`)
+    })
+})
+.catch((err)=>{
+    console.log("MongoDB connection failed", err);
+})
 
-// const app = express()
+
 // ;( async () => {
     
 //     try{
