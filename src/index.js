@@ -8,11 +8,15 @@ import connectDB  from "./db/index.js"
 dotenv.config({
     path : './.env'
 })
+
 const app = express()
 let port = process.env.PORT || 8000;
    
 connectDB()
 .then(()=>{
+    app.on("error", (err)=>{
+        console.log("Error in running the server" , err);
+    })
     app.listen(port, ()=>{
         console.log(`server is running on port ${port}`)
     })
