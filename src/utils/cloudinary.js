@@ -1,5 +1,9 @@
 import {v2 as cloudinary} from "cloudinary"
 import { log } from "console";
+import dotenv from "dotenv"
+dotenv.config({
+    path : './.env'
+})
 import fs from "fs"
 
 
@@ -17,12 +21,14 @@ import fs from "fs"
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto"
         })
-        //file has been uploaded succesfully
-        console.log("File is uploaded on cloudinary");
-        console.log(response.url)
+        ///file has been uploaded succesfully
+        // log("File is uploaded on cloudinary");
+        // log(response.url)
+        fs.unlinkSync(localFilePath)
         return response
     } catch (error) {
         fs.unlinkSync(localFilePath)
+        log("Error in uploading file: ", error)
 
         return null
     }

@@ -1,17 +1,22 @@
-import dotenv from "dotenv"
-import mongoose from "mongoose"
-import {DB_NAME} from "./constants.js"
+console.log("🚀 index.js is executing...");
 
-import express from "express"
+import dotenv from "dotenv"
+// import mongoose from "mongoose"
+// import {DB_NAME} from "./constants.js"
+// import express from "express"
 import connectDB  from "./db/index.js"
 import {app} from "./app.js"
-
 dotenv.config({
     path : './.env'
 })
 
+console.log("🔍 CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("🔍 CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY);
+console.log("🔍 CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET);
 
-let port = process.env.PORT || 8000;
+
+
+let port = process.env.PORT;
    
 connectDB()
 .then(()=>{
