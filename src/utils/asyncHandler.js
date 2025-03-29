@@ -4,6 +4,7 @@ const asyncHandler = (requestHandler) => {
             .catch((err) => next(err))
     }
 }
+// pehle is method mai return nhi likha tha jiski vajah se post request mai error aa raha tha
 // the below code is implementation using try catch block, another way to do this using promise method is which is upper one , 
     // const asyncHandler = (fn) => async (req,res,next) => {
     //     try {

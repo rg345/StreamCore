@@ -1,5 +1,3 @@
-console.log("🚀 index.js is executing...");
-
 import dotenv from "dotenv"
 // import mongoose from "mongoose"
 // import {DB_NAME} from "./constants.js"
@@ -9,11 +7,6 @@ import {app} from "./app.js"
 dotenv.config({
     path : './.env'
 })
-
-console.log("🔍 CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME);
-console.log("🔍 CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY);
-console.log("🔍 CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET);
-
 
 
 let port = process.env.PORT;

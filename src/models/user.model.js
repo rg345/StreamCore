@@ -53,19 +53,21 @@ const userSchema = new Schema(
     {
         timestamps: true
     }
-)
+);
 
 
 userSchema.pre("save",async function (next) {
     //lekin password har baar koi info save krne pr encrypt nhi krna, jab new password creation ho ya 
     //password modification ho tabhi ye kaam krna hai
+    // console.log("🔍 pre-save hook running...");
     if(!this.isModified("password")) return next();
-    this.password = bcrypt.hash(this.password, 10)
-
+    this.password = await bcrypt.hash(this.password, 10)
+    
     next()
-})
+});
 
 userSchema.methods.isPasswordCorrect = async function(password) {
+
     return await bcrypt.compare(password, this.password)
 }
 
