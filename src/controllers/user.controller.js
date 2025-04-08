@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { deleteFromCloudinary } from "../utils/cloudinaryRemove.js";
 import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -308,6 +309,14 @@ const updateUserAvatar =asyncHandler ( async (req,res) => {
     }
     //cloudinary se complete object return ho rha hai hame keval uska url dB mai daalna h
 
+    const oldAvatarLocalPath = req.user.avatar;
+
+    const deleteOldFile = await deleteFromCloudinary(oldAvatarLocalPath);
+
+    if(!deleteOldFile){
+        throw new ApiError(400, "Error while deleting old avatar file from Cloudinary");
+    }
+
     const user = await User.findByIdAndUpdate(
         req.user._id,
         {
@@ -322,7 +331,7 @@ const updateUserAvatar =asyncHandler ( async (req,res) => {
     return res
     .status(200)
     .json(
-        new ApiResponse(200, user, "Avatar Image uploaded Successfully")
+        new ApiResponse(200, user, "Avatar Image Updated Successfully")
     )
 })
 
@@ -357,6 +366,76 @@ const updateUserCoverImage =asyncHandler ( async (req,res) => {
     )
 })
 
+const getUserChannelProfile = asyncHandler( async (req,res) => {
+    const {username} = req.params
+
+    if(!username?.trim()){
+        throw new ApiError(400, "username is missing")
+    }
+
+    const channel = await User.aggregate([
+        {
+            $match: {
+                username : username?.toLowerCase()
+            }
+        },
+        {
+            $lookup: {
+                from : "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup: {
+                from : "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribedTo"
+            }
+        },
+        {
+            $addFields :{
+                subscribersCount : {
+                    $size : "$subscribers",
+                },
+                channelSubscribedToCount : {
+                    $size : "$subscribedTo"
+                },
+                isSubscribed : {
+                    $cond : {
+                        if: {$in: [req.user?._id, "$subscribers.subscriber"]},
+                        then: true,
+                        else: false
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                username : 1,
+                fullname : 1,
+                subscribersCount: 1, 
+                channelSubscribedToCount: 1,
+                isSubscribed: 1,
+                avatar: 1,
+                coverImage: 1
+            }
+        }
+    ])
+
+    if(!channel?.length){
+        throw new ApiError(400, "Channel doesn't exist")
+    }
+
+    return res
+    .statsu(200)
+    .json(
+        new ApiResponse(200, channel[0], "user channel fetched successfully")
+    )
+})
+
 export { 
     registerUser,
     loginUser,
@@ -366,5 +445,7 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage
+    updateUserCoverImage,
+    deleteFromCloudinary,
+    getUserChannelProfile
  }
