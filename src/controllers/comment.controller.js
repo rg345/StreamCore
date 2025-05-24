@@ -9,7 +9,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
     //Step 1: Get the video ID 
     const {videoId} = req.params
-    const {page = 1, limit = 10} = req.query
+    
 
     if(!isValidObjectId(videoId)){
         throw new ApiError(400, "Invalid Video ID")
@@ -17,12 +17,40 @@ const getVideoComments = asyncHandler(async (req, res) => {
 
     console.log("Video Id :" , videoId, "Type: ", typeof videoId )
 
+    /*
+    Step 2: Convert videoId to ObjectId
+    - MongoDB stores IDs as ObjectId, so we need to convert videoId (string) to ObjectId format.
+    - This ensures correct matching in the database.
+  */
+
     const videoObjectId = new mongoose.Types.ObjectId(String(videoId));
 
+    /*
+    Step 3: Extract pagination details from query parameters
+    - If the client sends ?page=2&limit=5, then:
+      - page = 2 (fetch second page of comments)
+      - limit = 5 (fetch 5 comments per page)
+    - If no values are provided, default to page 1 and limit 10
+  */
+    const {page = 1, limit = 10} = req.query
     const comments = await Comment.aggregate([
         {
             $match: {
                 video : videoObjectId
+            },
+            $lookup: {
+                from: "videos",
+                localField: "video",
+                foreignField: "_id",
+                as: "TargetVideo",
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "ownner",
+                foreignField: "_id",
+                as: "commentOwner"
             }
         }
     ])
