@@ -32,7 +32,7 @@ const createPlaylist = asyncHandler( async(req,res) => {
 
 });
 
-const getUserPlaylists = new asyncHandler( async (req,res) => {
+const getUserPlaylists = asyncHandler( async (req,res) => {
     const { userId } = req.params;
 
     //diff between fetching userId from req.user._id and req.params is that, in params you can pass the userId of any user, for example in this case we might want to get the playlist created by some other user, while req.user._id is used in a jwt decoded session, we can only use this when we know that the user is currently logged in and we are fetching some details of the user itself
@@ -58,7 +58,7 @@ const getUserPlaylists = new asyncHandler( async (req,res) => {
 
 })
 
-const getPlaylistById = new asyncHandler( async (req,res) => {
+const getPlaylistById = asyncHandler( async (req,res) => {
     const {playlistId} = req.params;
 
     if(!isValidObjectId(playlistId)){
@@ -78,7 +78,7 @@ const getPlaylistById = new asyncHandler( async (req,res) => {
     )
 })
 
-const addVideoToPlaylist = new asyncHandler( async (req,res) => {
+const addVideoToPlaylist = asyncHandler( async (req,res) => {
 
     const {playlistId, videoId} = req.params;
 
